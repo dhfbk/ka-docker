@@ -1,0 +1,93 @@
+version: '3.3'
+
+secrets:
+  mysql_secret:
+    file: ./mysql_secret.txt
+  rocketchat_secret:
+    file: ./admin_secret.txt
+  admin_secret:
+    file: ./admin_secret.txt
+
+services:
+
+  mysql:
+    image: mariadb:10.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_secret
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    secrets:
+      - mysql_secret
+
+  www:
+    build: ./www-image/
+    container_name: www-php7-container
+    image: www-php7
+    command: >
+      bash -c
+        "php /apps/rc-setup.php;
+        apache2-foreground"
+    ports:
+      - "8001:80"
+    depends_on:
+      - mysql
+    volumes:
+      - ./data/www:/var/www/html/
+    secrets:
+      - admin_secret
+      - rocketchat_secret
+
+  rocketchat:
+    image: registry.rocket.chat/rocketchat/rocket.chat:latest
+    command: >
+      bash -c
+        "export ADMIN_PASS=`cat /run/secrets/rocketchat_secret`;
+        for i in `seq 1 30`; do
+          node main.js &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    restart: unless-stopped
+    secrets:
+      - rocketchat_secret
+    volumes:
+      - ./data/uploads:/app/uploads
+    environment:
+      - PORT=3000
+      - ROOT_URL=http://localhost:3000/chat/
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - OVERWRITE_SETTING_Show_Setup_Wizard=completed
+      - ADMIN_USERNAME=admin
+      - ADMIN_NAME=Admin
+      - ADMIN_EMAIL=admin@kidactions.eu
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.2
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/data/db
+    command: mongod --oplogSize 128 --replSet rs0
+
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo:4.2
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          mongo mongo/rocketchat --eval \"
+            rs.initiate({
+              _id: 'rs0',
+              members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    depends_on:
+      - mongo
+
