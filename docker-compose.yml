@@ -15,6 +15,8 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_secret
+    ports:
+      - "13306:3306"
     volumes:
       - ./data/mysql:/var/lib/mysql
     secrets:
@@ -33,7 +35,8 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./data/www:/var/www/html/
+      - ./data/www:/var/www/html
+      - ../admin/kaum/api:/var/www/html/api
     secrets:
       - admin_secret
       - rocketchat_secret

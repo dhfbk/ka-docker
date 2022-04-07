@@ -2,9 +2,15 @@
 
 define('RC_ADMIN_FILE', "/var/run/secrets/rocketchat_secret");
 define('RC_APP_FILE', "/apps/app.zip");
+define('RC_LOCK_FILE', "/apps/rc.lock");
 
 $numTries = 100;
 $sleepTime = 5;
+
+if (file_exists(RC_LOCK_FILE)) {
+	print("Script already executed\n");
+	exit();
+}
 
 $rcPassword = file_get_contents(RC_ADMIN_FILE);
 $rcPassword = trim($rcPassword);
@@ -83,9 +89,18 @@ $headers = [
 	"X-User-Id: {$result->data->userId}",
 ];
 
+update_setting("Accounts_TwoFactorAuthentication_By_TOTP_Enabled", false, $headersJSON);
 update_setting("Accounts_TwoFactorAuthentication_Enabled", false, $headersJSON);
 update_setting("API_Enable_Rate_Limiter", false, $headersJSON);
 update_setting("Apps_Framework_Development_Mode", true, $headersJSON);
+
+update_setting("Accounts_AllowUserProfileChange", false, $headersJSON);
+update_setting("Accounts_AllowUserAvatarChange", false, $headersJSON);
+update_setting("Accounts_AllowRealNameChange", false, $headersJSON);
+update_setting("Accounts_AllowUserStatusMessageChange", false, $headersJSON);
+update_setting("Accounts_AllowUsernameChange", false, $headersJSON);
+update_setting("Accounts_AllowEmailChange", false, $headersJSON);
+update_setting("Accounts_AllowPasswordChange", false, $headersJSON);
 
 $url = "http://rocketchat:3000/chat/api/apps";
 $result = call_post($url, ["app" => new CURLFile(RC_APP_FILE)], $headers);
@@ -97,7 +112,10 @@ else {
 	fwrite(STDERR, "ERR in uploading app\n");
 	fwrite(STDERR, print_r($result, true));
 	exit();
+	// if ($result->error !== "App already exists.") {
+	// 	exit();
+	// }
 }
 
 print("Rocket.Chat app installed successfully\n");
-
+touch(RC_LOCK_FILE);

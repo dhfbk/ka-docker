@@ -19,3 +19,5 @@ RUN mv /var/www/phpMyAdmin* /var/www/pma
 RUN mv /var/www/pma/config.sample.inc.php /var/www/pma/config.inc.php
 RUN sed -i 's/localhost/mysql/g' /var/www/pma/config.inc.php
 
+RUN pecl install ds
+COPY extensions.ini /usr/local/etc/php/conf.d/
