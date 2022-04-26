@@ -110,7 +110,9 @@ update_setting("Accounts_AllowPasswordChange", false, $headersJSON);
 update_setting("UI_Use_Real_Name", true, $headersJSON);
 
 update_setting("Accounts_RegistrationForm", "Disabled", $headersJSON);
+update_setting("Livechat_enabled", false, $headersJSON);
 
+/*
 $url = "http://rocketchat:3000/chat/api/v1/channels.delete";
 $data = json_encode(["roomId" => "GENERAL"]);
 $result = call_post_with_pars($url, $data, $headersJSON);
@@ -122,6 +124,7 @@ else {
 	fwrite(STDERR, print_r($result, true));
 	exit();
 }
+*/
 
 $url = "http://rocketchat:3000/chat/api/apps";
 $result = call_post($url, ["app" => new CURLFile(RC_APP_FILE)], $headers);
