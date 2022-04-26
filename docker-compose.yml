@@ -42,7 +42,7 @@ services:
       - rocketchat_secret
 
   rocketchat:
-    image: registry.rocket.chat/rocketchat/rocket.chat:latest
+    image: rocket.chat:4
     command: >
       bash -c
         "export ADMIN_PASS=`cat /run/secrets/rocketchat_secret`;
