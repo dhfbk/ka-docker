@@ -8,7 +8,7 @@ RUN mkdir /apps
 COPY app.zip /apps/app.zip
 COPY rc-setup.php /apps/rc-setup.php
 
-RUN a2enmod rewrite proxy proxy_http
+RUN a2enmod rewrite proxy proxy_http headers
 
 RUN apt-get update
 RUN apt-get install -y unzip less nano

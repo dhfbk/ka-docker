@@ -36,11 +36,16 @@ function call_get($url, $headers = []) {
 	return $result;
 }
 
+function call_post_with_pars($url, $data, $headers = []) {
+	$result = call_post($url, $data, $headers);
+	$result = json_decode($result);
+	return $result;
+}
+
 function update_setting($variable, $value, $headers = []) {
 	$url = "http://rocketchat:3000/chat/api/v1/settings/$variable";
 	$data = json_encode(["value" => $value]);
-	$result = call_post($url, $data, $headers);
-	$result = json_decode($result);
+	$result = call_post_with_pars($url, $data, $headers);
 	if ($result->success) {
 		print("$variable value updated\n");
 	}
@@ -49,46 +54,46 @@ function update_setting($variable, $value, $headers = []) {
 		fwrite(STDERR, print_r($result, true));
 		exit();
 	}
-	return $result;
 }
 
 $url = "http://rocketchat:3000/chat/api/v1/login";
 $data = json_encode(["username" => "admin", "password" => $rcPassword]);
 
 $result = false;
+$loggedIn = false;
+$headersJSON = [];
+$headers = [];
 $num = 0;
-while ($result === false && $num++ < $numTries) {
+while (($result === false || $loggedIn === false) && $num++ < $numTries) {
 	print("Trying to login ($num)\n");
 	$result = call_post($url, $data, array('Content-Type: application/json'));
 	if ($result === false) {
 		sleep($sleepTime);
+		continue;
+	}
+	$result = json_decode($result);
+	if ($result->status === "success") {
+		print("Login successful\n");
+		$loggedIn = true;
+		$headersJSON = [
+			"X-Auth-Token: {$result->data->authToken}",
+			"X-User-Id: {$result->data->userId}",
+			"Content-Type: application/json",
+		];
+		$headers = [
+			"X-Auth-Token: {$result->data->authToken}",
+			"X-User-Id: {$result->data->userId}",
+		];
+	}
+	else {
+		fwrite(STDERR, "ERR in login\n");
+		fwrite(STDERR, print_r($result, true));
+		sleep($sleepTime);
 	}
 }
-if ($result === false) {
-	fwrite(STDERR, "ERR unable to perform login\n");
-	exit();
-}
-$result = json_decode($result);
 
-if ($result->status === "success") {
-	print("Login successful\n");
-}
-else {
-	fwrite(STDERR, "ERR in login\n");
-	fwrite(STDERR, print_r($result, true));
-	exit();
-}
-
-$headersJSON = [
-	"X-Auth-Token: {$result->data->authToken}",
-	"X-User-Id: {$result->data->userId}",
-	"Content-Type: application/json",
-];
-$headers = [
-	"X-Auth-Token: {$result->data->authToken}",
-	"X-User-Id: {$result->data->userId}",
-];
-
+update_setting("Accounts_TwoFactorAuthentication_By_Email_Enabled", false, $headersJSON);
+update_setting("Accounts_TwoFactorAuthentication_By_Email_Auto_Opt_In", false, $headersJSON);
 update_setting("Accounts_TwoFactorAuthentication_By_TOTP_Enabled", false, $headersJSON);
 update_setting("Accounts_TwoFactorAuthentication_Enabled", false, $headersJSON);
 update_setting("API_Enable_Rate_Limiter", false, $headersJSON);
@@ -101,6 +106,22 @@ update_setting("Accounts_AllowUserStatusMessageChange", false, $headersJSON);
 update_setting("Accounts_AllowUsernameChange", false, $headersJSON);
 update_setting("Accounts_AllowEmailChange", false, $headersJSON);
 update_setting("Accounts_AllowPasswordChange", false, $headersJSON);
+
+update_setting("UI_Use_Real_Name", true, $headersJSON);
+
+update_setting("Accounts_RegistrationForm", "Disabled", $headersJSON);
+
+$url = "http://rocketchat:3000/chat/api/v1/channels.delete";
+$data = json_encode(["roomId" => "GENERAL"]);
+$result = call_post_with_pars($url, $data, $headersJSON);
+if ($result->success) {
+	print("Channel deleted\n");
+}
+else {
+	fwrite(STDERR, "ERR in deleting channel\n");
+	fwrite(STDERR, print_r($result, true));
+	exit();
+}
 
 $url = "http://rocketchat:3000/chat/api/apps";
 $result = call_post($url, ["app" => new CURLFile(RC_APP_FILE)], $headers);
