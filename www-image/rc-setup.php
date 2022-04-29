@@ -2,6 +2,7 @@
 
 define('RC_ADMIN_FILE', "/var/run/secrets/rocketchat_secret");
 define('RC_APP_FILE', "/apps/app.zip");
+define('RC_AVATAR_FILE', "/apps/logo_kidactions4_512.png");
 define('RC_LOCK_FILE', "/apps/rc.lock");
 
 $numTries = 100;
@@ -91,6 +92,28 @@ while (($result === false || $loggedIn === false) && $num++ < $numTries) {
 		sleep($sleepTime);
 	}
 }
+
+$url = "http://rocketchat:3000/chat/api/v1/users.info?username=admin";
+$result = call_get($url, $headersJSON);
+$user = json_decode($result, true);
+
+$url = "http://rocketchat:3000/chat/api/v1/users.update";
+$data = json_encode([
+	"userId" => $user['user']['_id'],
+	"data" => [
+		"name" => "Kid Actions Admin",
+		"email" => "admin@kidactions.eu"
+	]
+]);
+$result = call_post_with_pars($url, $data, $headersJSON);
+
+$url = "http://rocketchat:3000/chat/api/v1/users.setAvatar";
+$vars = [];
+$result = call_post($url, [
+	"userId" => $user['user']['_id'],
+	"image" => new CURLFile(RC_AVATAR_FILE, "image/png")
+], $headers);
+$result = json_decode($result);
 
 update_setting("Accounts_TwoFactorAuthentication_By_Email_Enabled", false, $headersJSON);
 update_setting("Accounts_TwoFactorAuthentication_By_Email_Auto_Opt_In", false, $headersJSON);

@@ -7,6 +7,7 @@ COPY additional.conf /etc/apache2/sites-enabled/additional.conf
 RUN mkdir /apps
 COPY app.zip /apps/app.zip
 COPY rc-setup.php /apps/rc-setup.php
+COPY logo_kidactions4_512.png /apps/logo_kidactions4_512.png
 
 RUN a2enmod rewrite proxy proxy_http headers
 
