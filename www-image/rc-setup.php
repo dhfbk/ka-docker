@@ -47,11 +47,18 @@ function update_setting($variable, $value, $headers = []) {
 	$url = "http://rocketchat:3000/chat/api/v1/settings/$variable";
 	$data = json_encode(["value" => $value]);
 	$result = call_post_with_pars($url, $data, $headers);
+	result_log($result, "$variable value updated", "ERR in updating $variable value");
+}
+
+function result_log($result, $msg_ok, $msg_err) {
+	if (is_string($result)) {
+		$result = json_decode($result);
+	}
 	if ($result->success) {
-		print("$variable value updated\n");
+		print("$msg_ok\n");
 	}
 	else {
-		fwrite(STDERR, "ERR in updating $variable value\n");
+		fwrite(STDERR, "$msg_err\n");
 		fwrite(STDERR, print_r($result, true));
 		exit();
 	}
@@ -95,17 +102,48 @@ while (($result === false || $loggedIn === false) && $num++ < $numTries) {
 
 $url = "http://rocketchat:3000/chat/api/v1/users.info?username=admin";
 $result = call_get($url, $headersJSON);
+result_log($result, "User info loaded", "ERR in loading user info");
+
 $user = json_decode($result, true);
 
-$url = "http://rocketchat:3000/chat/api/v1/users.update";
-$data = json_encode([
-	"userId" => $user['user']['_id'],
-	"data" => [
-		"name" => "Kid Actions Admin",
-		"email" => "admin@kidactions.eu"
-	]
-]);
-$result = call_post_with_pars($url, $data, $headersJSON);
+$num = 0;
+$result = false;
+while (($result === false || !$result->success) && $num++ < $numTries) {
+	print("Trying to update user info ($num)\n");
+	$url = "http://rocketchat:3000/chat/api/v1/users.update";
+	$data = json_encode([
+		"userId" => $user['user']['_id'],
+		"data" => [
+			"name" => "Kid Actions Admin",
+			"email" => "admin@kidactions.eu"
+		]
+	]);
+	$result = call_post_with_pars($url, $data, $headersJSON);
+	if (!$result->success) {
+		fwrite(STDERR, "ERR in updating user info\n");
+		fwrite(STDERR, print_r($result, true));
+		sleep(1);
+	}
+}
+
+
+// $url = "http://rocketchat:3000/chat/api/v1/users.update";
+// $data = json_encode([
+// 	"userId" => $user['user']['_id'],
+// 	"data" => [
+// 		"name" => "Kid Actions Admin",
+// 		"email" => "admin@kidactions.eu"
+// 	]
+// ]);
+// $result = call_post_with_pars($url, $data, $headersJSON);
+result_log($result, "User info updated", "ERR in updating user info");
+
+update_setting("Accounts_TwoFactorAuthentication_By_Email_Enabled", false, $headersJSON);
+update_setting("Accounts_TwoFactorAuthentication_By_Email_Auto_Opt_In", false, $headersJSON);
+update_setting("Accounts_TwoFactorAuthentication_By_TOTP_Enabled", false, $headersJSON);
+update_setting("Accounts_TwoFactorAuthentication_Enabled", false, $headersJSON);
+update_setting("API_Enable_Rate_Limiter", false, $headersJSON);
+update_setting("Apps_Framework_Development_Mode", true, $headersJSON);
 
 $url = "http://rocketchat:3000/chat/api/v1/users.setAvatar";
 $vars = [];
@@ -114,13 +152,22 @@ $result = call_post($url, [
 	"image" => new CURLFile(RC_AVATAR_FILE, "image/png")
 ], $headers);
 $result = json_decode($result);
+result_log($result, "Avatar updated", "ERR in updating avatar");
 
-update_setting("Accounts_TwoFactorAuthentication_By_Email_Enabled", false, $headersJSON);
-update_setting("Accounts_TwoFactorAuthentication_By_Email_Auto_Opt_In", false, $headersJSON);
-update_setting("Accounts_TwoFactorAuthentication_By_TOTP_Enabled", false, $headersJSON);
-update_setting("Accounts_TwoFactorAuthentication_Enabled", false, $headersJSON);
-update_setting("API_Enable_Rate_Limiter", false, $headersJSON);
-update_setting("Apps_Framework_Development_Mode", true, $headersJSON);
+$url = "http://rocketchat:3000/chat/api/v1/method.call/setAsset";
+$contents = utf8_encode(file_get_contents(RC_AVATAR_FILE));
+$data = [
+	"method" => "setAsset",
+	"params" => [
+		$contents,
+		mime_content_type(RC_AVATAR_FILE),
+		"logo"
+	]
+];
+$result = call_post($url, json_encode([
+	"message" => json_encode($data)
+]), $headersJSON);
+result_log($result, "Main image updated", "ERR in updating main image");
 
 update_setting("Accounts_AllowUserProfileChange", false, $headersJSON);
 update_setting("Accounts_AllowUserAvatarChange", false, $headersJSON);
