@@ -29,18 +29,20 @@ services:
     command: >
       bash -c
         "php /apps/rc-setup.php;
+        php /apps/kaum-setup.php;
         apache2-foreground"
     ports:
       - "8001:80"
     depends_on:
       - mysql
     volumes:
-      - ./data/www:/var/www/html
+#      - ./data/www:/var/www/html
       - ./data/tasks:/var/www/tasks
-      - ../admin/kaum/api:/var/www/html/api
+#      - ../admin/kaum/api:/var/www/html/api
     secrets:
       - admin_secret
       - rocketchat_secret
+      - mysql_secret
 
   rocketchat:
     image: rocket.chat:4
