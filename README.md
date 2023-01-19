@@ -1,6 +1,11 @@
-# Kid Actions docker
+# Kid Actions Digital Education Platform docker file
 
-This project contains all the instructions to create a multi-container Docker application that includes the Kid Actions platform to be used in schools and education environments to prevent and respond to children and adolescent cyberbullying.
+This set of scripts contain the instructions and the code to install the Kid Actions Digital Education Platform on any machine.
+It is part of the European project [Kid Actions](https://www.kidactions.eu/), which aims at addressing cyberbullying among children and adolescents through interactive education and gamification in formal and informal settings.
+
+The platform includes three technological components: the chat application Rocket.Chat, the Creender tool for image annotation, and the High School Superhero videogame. The tools are all available together and can be administered through a single interface called Kaum (Kid Actions User Management), allowing a centralised management of users and tasks.
+
+The following sections contain the instructions to create a multi-container Docker application that includes the whole Kid Actions platform.
 
 ## Requirements
 
