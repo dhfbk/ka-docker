@@ -121,6 +121,9 @@ CREATE TABLE `hssh_datasets` (
   `id` int(11) NOT NULL,
   `project_id` int(11) DEFAULT NULL,
   `task_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `lang` varchar(2) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `type` enum('gr','ch') NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -178,6 +181,7 @@ INSERT INTO `options` (`id`, `value`, `api`) VALUES
 ('creender_default_question', 'If you saw this picture on Instagram, would you make fun of the user who posted it?', 1),
 ('creender_images_path', '/var/www/tasks/creender_images', 0),
 ('creender_photos_educator', '10', 1),
+('hssh_dataset_name_minlength', '4', 1),
 ('languages', 'it,en', 1),
 ('max_user_name_len', '25', 0),
 ('nouns_for_passwords', 'people\nhistory\nway\nart\nworld\ninformation\nmap\ntwo\nfamily\ngovernment\nhealth\nsystem\ncomputer\nmeat\nyear\nthanks\nmusic\nperson\nreading\nmethod\ndata\nfood\nunderstanding\ntheory\nlaw\nbird\nliterature\nproblem\nsoftware\ncontrol\nknowledge\npower\nability\neconomics\nlove\ninternet\ntelevision\nscience\nlibrary\nnature\nfact\nproduct\nidea\ntemperature\ninvestment\narea\nsociety\nactivity\nstory\nindustry\nmedia\nthing\noven\ncommunity\ndefinition\nsafety\nquality\ndevelopment\nlanguage\nmanagement\nplayer\nvariety\nvideo\nweek\nsecurity\ncountry\nexam\nmovie\norganization\nequipment\nphysics\nanalysis\npolicy\nseries\nthought\nbasis\nboyfriend\ndirection\nstrategy\ntechnology\narmy\ncamera\nfreedom\npaper\nenvironment\nchild\ninstance\nmonth\ntruth\nmarketing\nuniversity\nwriting\narticle\ndepartment\ndifference\ngoal\nnews\naudience\nfishing\ngrowth\nincome\nmarriage\nuser\ncombination\nfailure\nmeaning\nmedicine\nphilosophy\nteacher\ncommunication\nnight\nchemistry\ndisease\ndisk\nenergy\nnation\nroad\nrole\nsoup\nadvertising\nlocation\nsuccess\naddition\napartment\neducation\nmath\nmoment\npainting\npolitics\nattention\ndecision\nevent\nproperty\nshopping\nstudent\nwood\ncompetition\ndistribution\nentertainment\noffice\npopulation\npresident\nunit\ncategory\ncigarette\ncontext\nintroduction\nopportunity\nperformance\ndriver\nflight\nlength\nmagazine\nnewspaper\nrelationship\nteaching\ncell\ndealer\nfinding\nlake\nmember\nmessage\nphone\nscene\nappearance\nassociation\nconcept\ncustomer\ndeath\ndiscussion\nhousing\ninflation\ninsurance\nmood\nwoman\nadvice\nblood\neffort\nexpression\nimportance\nopinion\npayment\nreality\nresponsibility\nsituation\nskill\nstatement\nwealth\napplication\ncity\ncounty\ndepth\nestate\nfoundation\ngrandmother\nheart\nperspective\nphoto\nrecipe\nstudio\ntopic\ncollection\ndepression\nimagination\npassion\npercentage\nresource\nsetting\nad\nagency\ncollege\nconnection\ncriticism\ndebt\ndescription\nmemory\npatience\nsecretary\nsolution\nadministration\naspect\nattitude\ndirector\npersonality\npsychology\nrecommendation\nresponse\nselection\nstorage\nversion\nalcohol\nargument\ncomplaint\ncontract\nemphasis\nhighway\nloss\nmembership\npossession\npreparation\nsteak\nunion\nagreement\ncancer\ncurrency\nemployment\nengineering\nentry\ninteraction\nmixture\npreference\nregion\nrepublic\ntradition\nvirus\nactor\nclassroom\ndelivery\ndevice\ndifficulty\ndrama\nelection\nengine\nfootball\nguidance\nhotel\nowner\npriority\nprotection\nsuggestion\ntension\nvariation\nanxiety\natmosphere\nawareness\nbath\nbread\ncandidate\nclimate\ncomparison\nconfusion\nconstruction\nelevator\nemotion\nemployee\nemployer\nguest\nheight\nleadership\nmall\nmanager\noperation\nrecording\nsample\ntransportation\ncharity\ncousin\ndisaster\neditor\nefficiency\nexcitement\nextent\nfeedback\nguitar\nhomework\nleader\nmom\noutcome\npermission\npresentation\npromotion\nreflection\nrefrigerator\nresolution\nrevenue\nsession\nsinger\ntennis\nbasket\nbonus\ncabinet\nchildhood\nchurch\nclothes\ncoffee\ndinner\ndrawing\nhair\nhearing\ninitiative\njudgment\nlab\nmeasurement\nmode\nmud\norange\npoetry\npolice\npossibility\nprocedure\nqueen\nratio\nrelation\nrestaurant\nsatisfaction\nsector\nsignature\nsignificance\nsong\ntooth\ntown\nvehicle\nvolume\nwife\naccident\nairport\nappointment\narrival\nassumption\nbaseball\nchapter\ncommittee\nconversation\ndatabase\nenthusiasm\nerror\nexplanation\nfarmer\ngate\ngirl\nhall\nhistorian\nhospital\ninjury\ninstruction\nmaintenance\nmanufacturer\nmeal\nperception\npie\npoem\npresence\nproposal\nreception\nreplacement\nrevolution\nriver\nson\nspeech\ntea\nvillage\nwarning\nwinner\nworker\nwriter\nassistance\nbreath\nbuyer\nchest\nchocolate\nconclusion\ncontribution\ncookie\ncourage\ndad\ndesk\ndrawer\nestablishment\nexamination\ngarbage\ngrocery\nhoney\nimpression\nimprovement\nindependence\ninsect\ninspection\ninspector\nking\nladder\nmenu\npenalty\npiano\npotato\nprofession\nprofessor\nquantity\nreaction\nrequirement\nsalad\nsister\nsupermarket\ntongue\nweakness\nwedding\naffair\nambition\nanalyst\napple\nassignment\nassistant\nbathroom\nbedroom\nbeer\nbirthday\ncelebration\nchampionship\ncheek\nclient\nconsequence\ndeparture\ndiamond\ndirt\near\nfortune\nfriendship\nfuneral\ngene\ngirlfriend\nhat\nindication\nintention\nlady\nmidnight\nnegotiation\nobligation\npassenger\npizza\nplatform\npoet\npollution\nrecognition\nreputation\nshirt\nsir\nspeaker\nstranger\nsurgery\nsympathy\ntale\nthroat\ntrainer\nuncle\nyouth\ntime\nwork\nfilm\nwater\nmoney\nexample\nwhile\nbusiness\nstudy\ngame\nlife\nform\nair\nday\nplace\nnumber\npart\nfield\nfish\nback\nprocess\nheat\nhand\nexperience\njob\nbook\nend\npoint\ntype\nhome\neconomy\nvalue\nbody\nmarket\nguide\ninterest\nstate\nradio\ncourse\ncompany\nprice\nsize\ncard\nlist\nmind\ntrade\nline\ncare\ngroup\nrisk\nword\nfat\nforce\nkey\nlight\ntraining\nname\nschool\ntop\namount\nlevel\norder\npractice\nresearch\nsense\nservice\npiece\nweb\nboss\nsport\nfun\nhouse\npage\nterm\ntest\nanswer\nsound\nfocus\nmatter\nkind\nsoil\nboard\noil\npicture\naccess\ngarden\nrange\nrate\nreason\nfuture\nsite\ndemand\nexercise\nimage\ncase\ncause\ncoast\naction\nage\nbad\nboat\nrecord\nresult\nsection\nbuilding\nmouse\ncash\nclass\nnothing\nperiod\nplan\nstore\ntax\nside\nsubject\nspace\nrule\nstock\nweather\nchance\nfigure\nman\nmodel\nsource\nbeginning\nearth\nprogram\nchicken\ndesign\nfeature\nhead\nmaterial\npurpose\nquestion\nrock\nsalt\nact\nbirth\ncar\ndog\nobject\nscale\nsun\nnote\nprofit\nrent\nspeed\nstyle\nwar\nbank\ncraft\nhalf\ninside\noutside\nstandard\nbus\nexchange\neye\nfire\nposition\npressure\nstress\nadvantage\nbenefit\nbox\nframe\nissue\nstep\ncycle\nface\nitem\nmetal\npaint\nreview\nroom\nscreen\nstructure\nview\naccount\nball\ndiscipline\nmedium\nshare\nbalance\nbit\nblack\nbottom\nchoice\ngift\nimpact\nmachine\nshape\ntool\nwind\naddress\naverage\ncareer\nculture\nmorning\npot\nsign\ntable\ntask\ncondition\ncontact\ncredit\negg\nhope\nice\nnetwork\nnorth\nsquare\nattempt\ndate\neffect\nlink\npost\nstar\nvoice\ncapital\nchallenge\nfriend\nself\nshot\nbrush\ncouple\ndebate\nexit\nfront\nfunction\nlack\nliving\nplant\nplastic\nspot\nsummer\ntaste\ntheme\ntrack\nwing\nbrain\nbutton\nclick\ndesire\nfoot\ngas\ninfluence\nnotice\nrain\nwall\nbase\ndamage\ndistance\nfeeling\npair\nsavings\nstaff\nsugar\ntarget\ntext\nanimal\nauthor\nbudget\ndiscount\nfile\nground\nlesson\nminute\nofficer\nphase\nreference\nregister\nsky\nstage\nstick\ntitle\ntrouble\nbowl\nbridge\ncampaign\ncharacter\nclub\nedge\nevidence\nfan\nletter\nlock\nmaximum\nnovel\noption\npack\npark\nplenty\nquarter\nskin\nsort\nweight\nbaby\nbackground\ncarry\ndish\nfactor\nfruit\nglass\njoint\nmaster\nmuscle\nred\nstrength\ntraffic\ntrip\nvegetable\nappeal\nchart\ngear\nideal\nkitchen\nland\nlog\nmother\nnet\nparty\nprinciple\nrelative\nsale\nseason\nsignal\nspirit\nstreet\ntree\nwave\nbelt\nbench\ncommission\ncopy\ndrop\nminimum\npath\nprogress\nproject\nsea\nsouth\nstatus\nstuff\nticket\ntour\nangle\nblue\nbreakfast\nconfidence\ndaughter\ndegree\ndoctor\ndot\ndream\nduty\nessay\nfather\nfee\nfinance\nhour\njuice\nlimit\nluck\nmilk\nmouth\npeace\npipe\nseat\nstable\nstorm\nsubstance\nteam\ntrick\nafternoon\nbat\nbeach\nblank\ncatch\nchain\nconsideration\ncream\ncrew\ndetail\ngold\ninterview\nkid\nmark\nmatch\nmission\npain\npleasure\nscore\nscrew\nsex\nshop\nshower\nsuit\ntone\nwindow\nagent\nband\nblock\nbone\ncalendar\ncap\ncoat\ncontest\ncorner\ncourt\ncup\ndistrict\ndoor\neast\nfinger\ngarage\nguarantee\nhole\nhook\nimplement\nlayer\nlecture\nlie\nmanner\nmeeting\nnose\nparking\npartner\nprofile\nrespect\nrice\nroutine\nschedule\nswimming\ntelephone\ntip\nwinter\nairline\nbag\nbattle\nbed\nbill\nbother\ncake\ncode\ncurve\ndesigner\ndimension\ndress\nease\nemergency\nevening\nextension\nfarm\nfight\ngap\ngrade\nholiday\nhorror\nhorse\nhost\nhusband\nloan\nmistake\nmountain\nnail\nnoise\noccasion\npackage\npatient\npause\nphrase\nproof\nrace\nrelief\nsand\nsentence\nshoulder\nsmoke\nstomach\nstring\ntourist\ntowel\nvacation\nwest\nwheel\nwine\narm\naside\nassociate\nbet\nblow\nborder\nbranch\nbreast\nbrother\nbuddy\nbunch\nchip\ncoach\ncross\ndocument\ndraft\ndust\nexpert\nfloor\ngod\ngolf\nhabit\niron\njudge\nknife\nlandscape\nleague\nmail\nmess\nnative\nopening\nparent\npattern\npin\npool\npound\nrequest\nsalary\nshame\nshelter\nshoe\nsilver\ntackle\ntank\ntrust\nassist\nbake\nbar\nbell\nbike\nblame\nboy\nbrick\nchair\ncloset\nclue\ncollar\ncomment\nconference\ndevil\ndiet\nfear\nfuel\nglove\njacket\nlunch\nmonitor\nmortgage\nnurse\npace\npanic\npeak\nplane\nreward\nrow\nsandwich\nshock\nspite\nspray\nsurprise\ntill\ntransition\nweekend\nwelcome\nyard\nalarm\nbend\nbicycle\nbite\nblind\nbottle\ncable\ncandle\nclerk\ncloud\nconcert\ncounter\nflower\ngrandfather\nharm\nknee\nlawyer\nleather\nload\nmirror\nneck\npension\nplate\npurple\nruin\nship\nskirt\nslice\nsnow\nspecialist\nstroke\nswitch\ntrash\ntune\nzone\nanger\naward\nbid\nbitter\nboot\nbug\ncamp\ncandy\ncarpet\ncat\nchampion\nchannel\nclock\ncomfort\ncow\ncrack\nengineer\nentrance\nfault\ngrass\nguy\nhell\nhighlight\nincident\nisland\njoke\njury\nleg\nlip\nmate\nmotor\nnerve\npassage\npen\npride\npriest\nprize\npromise\nresident\nresort\nring\nroof\nrope\nsail\nscheme\nscript\nsock\nstation\ntoe\ntower\ntruck\nwitness\n', 0),
@@ -212,6 +216,36 @@ CREATE TABLE `projects` (
   `modified_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `confirmed` tinyint(1) NOT NULL DEFAULT 0,
   `disabled` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `rc_scenarios`
+--
+
+CREATE TABLE `rc_scenarios` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `lang` varchar(2) NOT NULL,
+  `label` varchar(200) NOT NULL,
+  `school` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `rc_schools`
+--
+
+CREATE TABLE `rc_schools` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -344,6 +378,19 @@ ALTER TABLE `projects`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indici per le tabelle `rc_scenarios`
+--
+ALTER TABLE `rc_scenarios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `school` (`school`);
+
+--
+-- Indici per le tabelle `rc_schools`
+--
+ALTER TABLE `rc_schools`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indici per le tabelle `tasks`
 --
 ALTER TABLE `tasks`
@@ -422,6 +469,18 @@ ALTER TABLE `hssh_rows`
 -- AUTO_INCREMENT per la tabella `projects`
 --
 ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `rc_scenarios`
+--
+ALTER TABLE `rc_scenarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `rc_schools`
+--
+ALTER TABLE `rc_schools`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
